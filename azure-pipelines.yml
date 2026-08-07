@@ -37,4 +37,4 @@ steps:
     inputs:
       command: "push"
       packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
-      publishVstsFeed: "iels-ord/iels-rbac"
+      publishVstsFeed: "iels-org/iels-rbac"

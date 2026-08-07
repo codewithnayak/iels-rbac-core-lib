@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - main
+      - master
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: UseDotNet@2
+    displayName: "Install .NET SDK"
+    inputs:
+      packageType: "sdk"
+      version: "8.x"
+
+  - task: NuGetToolInstaller@1
+    displayName: "Install NuGet"
+
+  - task: NuGetAuthenticate@1
+    displayName: "Authenticate to Azure Artifacts"
+
+  - script: |
+      dotnet restore src/Iels.Rbac.Core/Iels.Rbac.Core.csproj --configfile Iels.Rbac.Core/nuget.config
+    displayName: "Restore packages"
+
+  - script: |
+      dotnet build src/Iels.Rbac.Core/Iels.Rbac.Core.csproj -c Release
+    displayName: "Build RBAC package"
+
+  - script: |
+      dotnet pack src/Iels.Rbac.Core/Iels.Rbac.Core.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+    displayName: "Pack RBAC NuGet package"
+
+  - task: NuGetCommand@2
+    displayName: "Push package to Azure Artifacts"
+    inputs:
+      command: "push"
+      packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
+      publishVstsFeed: "iels-ord/iels-rbac"

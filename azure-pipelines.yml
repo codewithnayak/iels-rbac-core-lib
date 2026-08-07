@@ -21,7 +21,7 @@ steps:
     displayName: "Authenticate to Azure Artifacts"
 
   - script: |
-      dotnet restore src/Iels.Rbac.Core/Iels.Rbac.Core.csproj --configfile Iels.Rbac.Core/nuget.config
+      dotnet restore src/Iels.Rbac.Core/Iels.Rbac.Core.csproj --configfile src/Iels.Rbac.Core/nuget.config
     displayName: "Restore packages"
 
   - script: |
